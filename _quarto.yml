@@ -1,0 +1,5 @@
+project:
+  title: "bank_term_deposit_predictor"
+  type: default
+  render:
+    - reports/*.qmd
