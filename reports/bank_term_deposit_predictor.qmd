@@ -9,6 +9,7 @@ jupyter: python3
 from pathlib import Path
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
+from sklearn.model_selection import train_test_split
 ```
 
 # Summary
@@ -57,6 +58,27 @@ bank.head()
 ```
 
 ## Analysis
+
+We drop the `duration` column, because the call length is only known after the
+call has ended, so it cannot be used to predict the outcome of a new call.
+We then split the data into a training set (80%) and a test set (20%). The
+split is stratified on the target, so both sets have the same share of "yes"
+and "no". All exploration and model fitting use the training set only.
+
+```{python}
+# drop duration: it is only known after the call
+bank = bank.drop(columns=["duration"])
+
+# split into training (80%) and test (20%) sets
+# stratify keeps the "yes"/"no" share the same in both sets
+bank_train, bank_test = train_test_split(
+    bank, test_size=0.2, stratify=bank["y"], random_state=522
+)
+
+# save the split data
+bank_train.to_csv("../data/processed/bank_train.csv", index=False)
+bank_test.to_csv("../data/processed/bank_test.csv", index=False)
+```
 
 # Results & Discussion
 
