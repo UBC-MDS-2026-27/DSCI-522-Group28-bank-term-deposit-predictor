@@ -1,6 +1,65 @@
 ---
 title: "Predicting Bank Term Deposit Subscription"
-format:
-  html:
-    embed-resources: true
+author: "Du Du, Indervir Dhillon, Rohit Bansal, Kshitij Agarwal"
+date: "2026/11/19"
+jupyter: python3
 ---
+
+```{python}
+from pathlib import Path
+import pandas as pd
+from ucimlrepo import fetch_ucirepo
+```
+
+# Summary
+
+
+# Introduction
+
+
+# Methods
+
+## Data
+
+The data set used in this project is the Bank Marketing data set, created by
+Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning
+Repository and can be found [here](https://doi.org/10.24432/C5K306). Each row
+is one client of a Portuguese bank who was contacted in a direct marketing
+campaign. The columns include client details (e.g., age, job, education),
+details about the contact (e.g., contact type, month, duration), and whether
+the client subscribed to a term deposit (yes or no).
+
+We download the data with the code below and save unchanged in `data/raw/`.
+
+```{python}
+# Create folders if they don't exist
+raw_dir = Path("../data/raw")
+raw_dir.mkdir(parents=True, exist_ok=True)
+Path("../data/processed").mkdir(parents=True, exist_ok=True)
+
+# Download bank marketing data
+bank_marketing = fetch_ucirepo(id=222)
+
+# join feature and target columns
+bank = pd.concat(
+    [bank_marketing.data.features, bank_marketing.data.targets],
+    axis=1,
+)
+
+# Save the raw data
+bank.to_csv(raw_dir / "bank_marketing.csv", index=False)
+```
+
+```{python}
+# Read the raw data
+bank = pd.read_csv("../data/raw/bank_marketing.csv")
+bank.head()
+```
+
+## Analysis
+
+# Results & Discussion
+
+# References
+
+Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C5K306>.
