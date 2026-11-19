@@ -1,0 +1,10 @@
+[project]
+name = "dsci-522-group28-bank-term-deposit-predictor"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "jupyter>=1.1.1",
+    "numpy>=2.5.5",
+    "pandas>=3.1.1",
+    "ucimlrepo>=0.0.7",
+]
