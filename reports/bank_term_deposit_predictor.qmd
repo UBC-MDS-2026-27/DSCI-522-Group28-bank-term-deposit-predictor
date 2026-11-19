@@ -1,0 +1,7 @@
+---
+title: "Predicting Bank Term Deposit Subscription"
+format:
+  html:
+    embed-resources: true
+jupyter: python3
+---
