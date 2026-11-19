@@ -9,9 +9,11 @@
 
 ## How to run the analysis: 
 
+
 ## Dependencies: list them (e.g., uv, Quarto) or link to where they are listed (e.g., pyproject.toml).
 
-## Licenses: the names of the licenses in LICENSE.md (e.g., MIT and CC BY-NC-ND 4.0).
+## Licenses: MIY Licenses, Creative Commons, Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+
 
 ## AI use statement:
 
