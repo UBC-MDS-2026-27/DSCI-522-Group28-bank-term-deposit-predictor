@@ -10,6 +10,7 @@ from pathlib import Path
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score, precision_score, recall_score
 ```
 
 # Summary
@@ -114,6 +115,27 @@ predictor_columns = numeric_predictors + categorical_predictors
 X_train = bank_train[predictor_columns]
 y_train = bank_train["y"]
 ```
+
+### Baseline and evaluation metrics
+The baseline model always predicts the most common outcome in the training set, which is no subscription. In the training set about 11.7% of clients subscribed to a term deposit, so the baseline model has a training accuracy of about 88.3%, identifying no subscribers.
+
+We use F1-score for the "yes" class as our primary metric to evaluate model performance, because we want to combine both precision and recall of the model. We also report both scores separately.
+
+```{python}
+majority_label = y_train.value_counts().idxmax()
+
+def metrics(y_true, y_pred):
+    return {
+        "F1": f1_score(y_true, y_pred, pos_label="yes", zero_division=0),
+        "Precision": precision_score(
+            y_true, y_pred, pos_label="yes", zero_division=0
+        ),
+        "Recall": recall_score(
+            y_true, y_pred, pos_label="yes", zero_division=0
+        ),
+    }
+```
+
 
 # Results & Discussion
 
