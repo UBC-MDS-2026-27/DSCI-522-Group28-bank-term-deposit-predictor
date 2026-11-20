@@ -2276,7 +2276,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </header>
 
 
-<div id="c17f5a77" class="cell" data-execution_count="1">
+<div id="9b83ff3b" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucimlrepo <span class="im">import</span> fetch_ucirepo</span>
@@ -2294,7 +2294,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>The data set used in this project is the Bank Marketing data set, created by Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning Repository and can be found <a href="https://doi.org/10.24432/C5K306">here</a>. Each row is one client of a Portuguese bank who was contacted in a direct marketing campaign. The columns include client details (e.g., age, job, education), details about the contact (e.g., contact type, month, duration), and whether the client subscribed to a term deposit (yes or no).</p>
 <p>We download the data with the code below and save unchanged in <code>data/raw/</code>.</p>
-<div id="7c20d95e" class="cell" data-execution_count="2">
+<div id="06e48313" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create folders if they don&#39;t exist</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="op">=</span> Path(<span class="st">&quot;../data/raw&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>raw_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
@@ -2312,7 +2312,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the raw data</span></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>bank.to_csv(raw_dir <span class="op">/</span> <span class="st">&quot;bank_marketing.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="79bc9f66" class="cell" data-execution_count="3">
+<div id="9c8bd7fd" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the raw data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> pd.read_csv(<span class="st">&quot;../data/raw/bank_marketing.csv&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>bank.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2454,7 +2454,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
 <p>We drop the <code>duration</code> column, because the call length is only known after the call has ended, so it cannot be used to predict the outcome of a new call. We then split the data into a training set (80%) and a test set (20%). The split is stratified on the target, so both sets have the same share of “yes” and “no”. All exploration and model fitting use the training set only.</p>
-<div id="4c7dda55" class="cell" data-execution_count="4">
+<div id="42958a67" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># drop duration: it is only known after the call</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> bank.drop(columns<span class="op">=</span>[<span class="st">&quot;duration&quot;</span>])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -2471,7 +2471,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <section id="predictors-and-target" class="level3">
 <h3 class="anchored" data-anchor-id="predictors-and-target">Predictors and target</h3>
 <p>We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is ‘yes’, meaning the client subscribed. We use client characteristics (age, occupation, marital status, and education), financial information (average yearly account balance, credit default status, and whether the client has a housing loan or a personal loan), and previous campaign history (the number of prior contacts, the number of days since the last prior contact, and the previous campaign outcome). We exclude the current campaign’s recorded contact method, contact date, number of contacts, and call duration because these details are unavailable at the time of prediction.</p>
-<div id="baa120dd" class="cell" data-execution_count="5">
+<div id="8619f9f4" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>numeric_predictors <span class="op">=</span> [</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;age&quot;</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;balance&quot;</span>,</span>
