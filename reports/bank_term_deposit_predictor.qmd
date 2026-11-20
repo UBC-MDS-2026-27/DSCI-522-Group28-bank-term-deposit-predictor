@@ -11,6 +11,11 @@ import pandas as pd
 from ucimlrepo import fetch_ucirepo
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, precision_score, recall_score
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 ```
 
 # Summary
@@ -136,6 +141,32 @@ def metrics(y_true, y_pred):
     }
 ```
 
+### Model fitting
+
+We use logistic regression to calculate the probability that a client will subscribe to a term deposit. This model choice makes sense because the outcome has two possible values, yes and no, with yes as the positive class.
+
+The pipeline standardizes the numeric predictors, replaces missing categorical values with a “missing” label, and one-hot encodes the categorical predictors. We fit the preprocessor and the model on the training data and reserve the test set for evaluating the final model.
+
+```{python}
+categorical_preprocessor = make_pipeline(
+    SimpleImputer(strategy="constant", fill_value="missing"),
+    OneHotEncoder(handle_unknown="ignore"),
+)
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numeric", StandardScaler(), numeric_predictors),
+        ("categorical", categorical_preprocessor, categorical_predictors),
+    ]
+)
+
+model = make_pipeline(
+    preprocessor,
+    LogisticRegression(max_iter=1000),
+)
+
+model.fit(X_train, y_train);
+```
 
 # Results & Discussion
 
