@@ -17,9 +17,9 @@ from sklearn.metrics import f1_score, precision_score, recall_score
 
 
 # Introduction
-Term deposits are important products of a bank. However, it is not ideal to successfully guide customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to identify and predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation.
+Term deposits are important financial products offered by banks. However, it is not ideal to successfully track customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation.
 
-This project aims at predicting whether customers would subscribe to term deposits before having access to the current campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customers’ demographics, financial, and historical campaign information. Target variable y measures whether a customer subscribes or not (yes or no). In order to prevent unavailable information in predictions, current campaign contact information is excluded.
+This project aims at predicting, before the first contact with clients in the current campaign, whether customers would subscribe to term deposits during the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customers’ demographics, financial, and historical campaign information. Target variable y measures whether a customer subscribes or not (yes or no). In order to prevent unavailable information in predictions, current campaign contact information is excluded.
 
 
 # Methods
@@ -144,4 +144,7 @@ def metrics(y_true, y_pred):
 
 # References
 
+
 Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C5K306>.
+
+Xie, C., Zhang, J.-L., Zhu, Y., Xiong, B., & Wang, G.-J. (2023). How to improve the success of bank telemarketing? Prediction and interpretability analysis based on machine learning. Computers & Industrial Engineering, 175, 108874. <https://doi.org/10.1016/j.cie.2022.108874>
