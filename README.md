@@ -33,7 +33,7 @@ Python dependencies including Jupyter, pandas, scikit-learn are in pyproject.tom
 
 
 ## Licenses: 
-MIY Licenses, Creative Commons, Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+MIT License, Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
 
 
 ## AI use statement:
