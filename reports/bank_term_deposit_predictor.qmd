@@ -80,6 +80,41 @@ bank_train.to_csv("../data/processed/bank_train.csv", index=False)
 bank_test.to_csv("../data/processed/bank_test.csv", index=False)
 ```
 
+### Predictors and target
+
+We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is 'yes', meaning the client subscribed. We use client characteristics (age, occupation, marital status, and
+education), financial information (average yearly account balance, credit
+default status, and whether the client has a housing loan or a personal loan),
+and previous campaign history (the number of prior contacts, the number of days
+since the last prior contact, and the previous campaign outcome). We exclude
+the current campaign’s recorded contact method, contact date, number of
+contacts, and call duration because these details are unavailable at the time
+of prediction.
+
+```{python}
+numeric_predictors = [
+    "age",
+    "balance",
+    "pdays",
+    "previous",
+]
+
+categorical_predictors = [
+    "job",
+    "marital",
+    "education",
+    "default",
+    "housing",
+    "loan",
+    "poutcome",
+]
+
+predictor_columns = numeric_predictors + categorical_predictors
+
+X_train = bank_train[predictor_columns]
+y_train = bank_train["y"]
+```
+
 # Results & Discussion
 
 # References
