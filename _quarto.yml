@@ -3,3 +3,8 @@ project:
   type: default
   render:
     - reports/*.qmd
+
+format:
+  html:
+    embed-resources: true
+    toc: true
