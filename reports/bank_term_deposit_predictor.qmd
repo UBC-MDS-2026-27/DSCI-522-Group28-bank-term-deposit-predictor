@@ -16,6 +16,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
 ```
 
 # Summary
@@ -168,7 +170,50 @@ model = make_pipeline(
 model.fit(X_train, y_train);
 ```
 
-# Results & Discussion
+# Results
+```{python}
+#| label: tbl-test-performance
+#| tbl-cap: "F1, precision, and recall for the subscription class on the held-out test set."
+X_test = bank_test[predictor_columns]
+y_test = bank_test["y"]
+
+baseline_predictions = [majority_label] * len(y_test)
+model_predictions = model.predict(X_test)
+
+test_results = pd.DataFrame([
+    {"Model": "Majority-class baseline", **metrics(y_test, baseline_predictions)},
+    {"Model": "Logistic regression", **metrics(y_test, model_predictions)},
+])
+
+test_results.set_index("Model").round(3)
+```
+
+The majority-class baseline predicts no subscription for every client, giving it an F1 score and recall of 0. Its precision is undefined because it made no positive predictions, so it is displayed as 0.
+
+@tbl-test-performance compares logistic regression with the majority-class baseline. Logistic regression achieves a F1 score of 0.250, compared with 0.000 for the majority-class baseline. Of the clients predicted to subscribe, 64.1% actually subscribed. The model identified 164 of the 1,058 actual subscribers, giving it a recall of 15.5%. The confusion matrix (@fig-test-confusion) shows that the remaining 894 subscribers were classified as non-subscribers.
+
+```{python}
+#| label: fig-test-confusion
+#| fig-cap: "Logistic regression predictions on the held-out test set."
+
+ConfusionMatrixDisplay.from_predictions(
+    y_test,
+    model_predictions,
+    labels=["no", "yes"],
+    display_labels=["No subscription", "Subscription"],
+    cmap="Blues",
+    colorbar=False,
+)
+plt.show()
+```
+
+# Discussion
+
+As we expected, logistic regression performed better than the majority-class baseline on F1-score. Using information available before the first call, it identified 15.5% of subscribers in the test set. The bank could use the model to prioritize clients when it has limited capacity to make calls. Although if it called only clients the model predicted would subscribe, it would have missed 84.5% of the subscribers in the test set.
+
+The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results here describe who subscribed among the clients the bank called, it does not necassarily measure whether the calls increased subscriptions.
+
+Future work could compare logistic regression with a different baseline, such as predicting subscription for clients whose previous campaign outcome was successful, and with other models such as random forests. We could use cross-validation to test whether adjusting the classification threshold or giving more weight to the subscription class improves F1. We could also compare how many subscribers each model identifies for a fixed number of calls. Finally, we could gather data from different banks and time periods to see whether the results hold across institutions and campaigns.
 
 # References
 
