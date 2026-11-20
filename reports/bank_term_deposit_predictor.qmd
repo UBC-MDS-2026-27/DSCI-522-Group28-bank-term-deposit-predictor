@@ -17,6 +17,9 @@ from sklearn.metrics import f1_score, precision_score, recall_score
 
 
 # Introduction
+Term deposits are important products of a bank. However, it is not ideal to successfully guide customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to identify and predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation.
+
+This project aims at predicting whether customers would subscribe to term deposits before having access to the current campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customers’ demographics, financial, and historical campaign information. Target variable y measures whether a customer subscribes or not (yes or no). In order to prevent unavailable information in predictions, current campaign contact information is excluded.
 
 
 # Methods
