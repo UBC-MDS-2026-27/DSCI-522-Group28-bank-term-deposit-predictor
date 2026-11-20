@@ -6,7 +6,7 @@
 Du Du, Kshitij Agarwal, Indervir Dhillon, Rohit Bansal (Ordered by first name)
 
 ## Summary: 
-This project asks whether a client will subscribe to a bank term deposit given the information available before a telephone marketing call is made. We use the Bank Marketing dataset from teh UCI Machine Learning Repository, which records 45,211 clients who have been contacted by a Portuguese bank. 
+This project asks whether a client will subscribe to a bank term deposit given the information available before a telephone marketing call is made. We use the Bank Marketing dataset from teh UCI Machine Learning Repository, which records 45,211 clients who have been contacted by a Portuguese bank. You can access our analysis from this link: https://ubc-mds-2026-27.github.io/DSCI-522-Group28-bank-term-deposit-predictor/reports/bank_term_deposit_predictor.html
 
 ## How to run the analysis: 
 The first time you access the project:
