@@ -123,7 +123,39 @@ X_train = bank_train[predictor_columns]
 y_train = bank_train["y"]
 ```
 
+### Training data exploration
+
+We compare subscription rates for clients with and without previous campaign contact to explore whether contact history is associated with subscription.
+
+```{python}
+#| label: fig-training-subscription
+#| fig-cap: "Term-deposit subscription rates by previous campaign contact in the training set."
+
+prior_contact = bank_train["previous"].gt(0).map({
+    False: "No prior contact",
+    True: "Prior contact",
+})
+
+subscription_rates = (
+    bank_train["y"].eq("yes")
+    .groupby(prior_contact)
+    .mean()
+    .mul(100)
+)
+
+fig, ax = plt.subplots(figsize=(6, 4))
+bars = ax.bar(subscription_rates.index, subscription_rates.values)
+ax.bar_label(bars, fmt="%.1f%%", padding=3)
+ax.set_xlabel("Previous campaign contact")
+ax.set_ylabel("Clients who subscribed (%)")
+ax.set_ylim(0, subscription_rates.max() * 1.2)
+plt.show()
+```
+
+In the training set, 23.5% of clients with prior campaign contact subscribed to a term deposit, compared with 9.1% of clients without prior contact (@fig-training-subscription). This difference suggests that contact history may help predict subscription before the first call of the current campaign.
+
 ### Baseline and evaluation metrics
+
 The baseline model always predicts the most common outcome in the training set, which is no subscription. In the training set about 11.7% of clients subscribed to a term deposit, so the baseline model has a training accuracy of about 88.3%, identifying no subscribers.
 
 We use F1-score for the "yes" class as our primary metric to evaluate model performance, because we want to combine both precision and recall of the model. We also report both scores separately.
@@ -171,6 +203,7 @@ model.fit(X_train, y_train);
 ```
 
 # Results
+
 ```{python}
 #| label: tbl-test-performance
 #| tbl-cap: "F1, precision, and recall for the subscription class on the held-out test set."
