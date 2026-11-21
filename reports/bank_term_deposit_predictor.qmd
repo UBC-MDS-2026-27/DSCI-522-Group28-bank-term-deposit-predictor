@@ -5,7 +5,11 @@ date: "2026/11/19"
 jupyter: python3
 ---
 
+<!-- Run the analysis before Summary so inline expressions have their values. -->
+
 ```{python}
+#| include: false
+
 from pathlib import Path
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
@@ -17,33 +21,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 import matplotlib.pyplot as plt
-from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 ```
 
-# Summary
-In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of 0.250 (64.1% precision and 15.5% recall), outperforming a majority-class baseline that achieved an F1 score of 0.000. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model's low recall means that targeting only predicted subscribers would miss 84.5% of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.
-
-# Introduction
-Term deposits are important financial products offered by banks. However, it is not ideal to successfully track customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation. This is enlightened by previous study which pointed out that machine learning has potential on identifying prospective customers before launching bank telemarketing campaigns, which further support targeted marketing strategies (Tékouabou et al., 2022).
-
-This project aims at predicting, before the first contact with clients in the current campaign, whether customers would subscribe to term deposits during the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customers’ demographics, financial, and historical campaign information. Target variable y measures whether a customer subscribes or not (yes or no). In order to prevent unavailable information in predictions, current campaign contact information is excluded. Recent research also discussed predictive models and interpretability analysis can support more effective marketing decisions. (Xie et al., 2023)
-
-
-# Methods
-
-## Data
-
-The data set used in this project is the Bank Marketing data set, created by
-Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning
-Repository and can be found [here](https://doi.org/10.24432/C5K306). Each row
-is one client of a Portuguese bank who was contacted in a direct marketing
-campaign. The columns include client details (e.g., age, job, education),
-details about the contact (e.g., contact type, month, duration), and whether
-the client subscribed to a term deposit (yes or no).
-
-We download the data with the code below and save unchanged in `data/raw/`.
-
 ```{python}
+#| include: false
+
 # Create folders if they don't exist
 raw_dir = Path("../data/raw")
 raw_dir.mkdir(parents=True, exist_ok=True)
@@ -63,27 +46,16 @@ bank.to_csv(raw_dir / "bank_marketing.csv", index=False)
 ```
 
 ```{python}
-# Read the raw data
-bank = pd.read_csv("../data/raw/bank_marketing.csv")
-bank.head()
-```
+#| include: false
 
-## Analysis
-
-We drop the `duration` column, because the call length is only known after the
-call has ended, so it cannot be used to predict the outcome of a new call.
-We then split the data into a training set (80%) and a test set (20%). The
-split is stratified on the target, so both sets have the same share of "yes"
-and "no". All exploration and model fitting use the training set only.
-
-```{python}
-# drop duration: it is only known after the call
-bank = bank.drop(columns=["duration"])
-
-# split into training (80%) and test (20%) sets
-# stratify keeps the "yes"/"no" share the same in both sets
+# Keep the raw data for inspection and exclude call duration from the split.
+bank = pd.read_csv(raw_dir / "bank_marketing.csv")
+test_fraction = 0.2
 bank_train, bank_test = train_test_split(
-    bank, test_size=0.2, stratify=bank["y"], random_state=522
+    bank.drop(columns=["duration"]),
+    test_size=test_fraction,
+    stratify=bank["y"],
+    random_state=522,
 )
 
 # save the split data
@@ -91,18 +63,9 @@ bank_train.to_csv("../data/processed/bank_train.csv", index=False)
 bank_test.to_csv("../data/processed/bank_test.csv", index=False)
 ```
 
-### Predictors and target
-
-We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is 'yes', meaning the client subscribed. We use client characteristics (age, occupation, marital status, and
-education), financial information (average yearly account balance, credit
-default status, and whether the client has a housing loan or a personal loan),
-and previous campaign history (the number of prior contacts, the number of days
-since the last prior contact, and the previous campaign outcome). We exclude
-the current campaign’s recorded contact method, contact date, number of
-contacts, and call duration because these details are unavailable at the time
-of prediction.
-
 ```{python}
+#| include: false
+
 numeric_predictors = [
     "age",
     "balance",
@@ -126,7 +89,136 @@ X_train = bank_train[predictor_columns]
 y_train = bank_train["y"]
 ```
 
+```{python}
+#| include: false
+
+class_counts = y_train.value_counts().reindex(["yes", "no"], fill_value=0)
+training_subscribers = class_counts["yes"]
+training_subscription_rate = training_subscribers / len(y_train)
+majority_label = y_train.value_counts().idxmax()
+baseline_training_accuracy = class_counts[majority_label] / len(y_train)
+
+def metrics(y_true, y_pred):
+    return {
+        "F1": f1_score(y_true, y_pred, pos_label="yes", zero_division=0),
+        "Precision": precision_score(
+            y_true, y_pred, pos_label="yes", zero_division=0
+        ),
+        "Recall": recall_score(
+            y_true, y_pred, pos_label="yes", zero_division=0
+        ),
+    }
+```
+
+```{python}
+#| include: false
+
+categorical_preprocessor = make_pipeline(
+    SimpleImputer(strategy="constant", fill_value="missing"),
+    OneHotEncoder(handle_unknown="ignore"),
+)
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numeric", StandardScaler(), numeric_predictors),
+        ("categorical", categorical_preprocessor, categorical_predictors),
+    ]
+)
+
+model = make_pipeline(
+    preprocessor,
+    LogisticRegression(max_iter=1000),
+)
+
+model.fit(X_train, y_train)
+```
+
+```{python}
+#| include: false
+
+X_test = bank_test[predictor_columns]
+y_test = bank_test["y"]
+
+baseline_predictions = [majority_label] * len(y_test)
+model_predictions = model.predict(X_test)
+
+baseline_scores = metrics(y_test, baseline_predictions)
+model_scores = metrics(y_test, model_predictions)
+
+class_labels = ["no", "yes"]
+test_confusion = confusion_matrix(y_test, model_predictions, labels=class_labels)
+_, _, missed_subscribers, identified_subscribers = test_confusion.ravel()
+actual_subscribers = identified_subscribers + missed_subscribers
+missed_subscription_rate = 1 - model_scores["Recall"]
+```
+
+# Summary
+In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of `{python} f"{model_scores['F1']:.3f}"` (`{python} f"{model_scores['Precision']:.1%}"` precision and `{python} f"{model_scores['Recall']:.1%}"` recall). The majority-class baseline achieved an F1 score of `{python} f"{baseline_scores['F1']:.3f}"`. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model's low recall means that targeting only predicted subscribers would miss `{python} f"{missed_subscription_rate:.1%}"` of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.
+
+# Introduction
+Term deposits are important financial products offered by banks. However, it is still challenging to identify customers who are likely to subscribe through direct marketing campaigns. To address this challenge, we use classification model to predict which customers are likely to subscribe based on a series of their characteristics. This would help banks improve marketing efficiency and effective resource allocation. This approach is motivated by previous research suggesting that machine learning can identify prospective customers before bank telemarketing campaigns, which supports more targeted marketing strategies (Tékouabou et al., 2022).
+
+This project aims at predicting whether customers will subscribe to term deposits during a marketing campaign, provided with information before their first contact in the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customer demographic characteristics, financial information, and historical campaign data. The target variable indicates whether a customer subscribes to a term deposit (yes or no). To prevent data leakage, before the first customer contact the information from current campaign is excluded. Recent research has also highlighted how predictive models and model interpretability can support more effective marketing decisions (Xie et al., 2023).
+
+# Methods
+
+## Data
+
+The data set used in this project is the Bank Marketing data set, created by
+Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning
+Repository and can be found [here](https://doi.org/10.24432/C5K306). Each row
+is one client of a Portuguese bank who was contacted in a direct marketing
+campaign. The columns include client details (e.g., age, job, education),
+details about the contact (e.g., contact type, month, duration), and whether
+the client subscribed to a term deposit (yes or no).
+
+Rendering the report downloads the data and saves a raw copy in `data/raw/`.
+
+```{python}
+bank.head()
+```
+
+## Analysis
+
+We drop the `duration` column, because the call length is only known after the
+call has ended, so it cannot be used to predict the outcome of a new call.
+We then split the data into a training set (`{python} f"{1 - test_fraction:.0%}"`) and a test set (`{python} f"{test_fraction:.0%}"`). The
+split is stratified on the target, so both sets have the same share of "yes"
+and "no". All exploration and model fitting use the training set only.
+
+### Predictors and target
+
+We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is 'yes', meaning the client subscribed. We use client characteristics (age, occupation, marital status, and
+education), financial information (average yearly account balance, credit
+default status, and whether the client has a housing loan or a personal loan),
+and previous campaign history (the number of prior contacts, the number of days
+since the last prior contact, and the previous campaign outcome). We exclude
+the current campaign’s recorded contact method, contact date, number of
+contacts, and call duration because these details are unavailable at the time
+of prediction.
+
 ### Training data exploration
+
+@tbl-training-summary shows that the training set contains `{python} f"{len(y_train):,}"` clients, of whom `{python} f"{training_subscribers:,}"` (`{python} f"{training_subscription_rate:.1%}"`) subscribed to a term deposit. The table also summarizes missing values by predictor. The missing-value rows below include only predictors with at least one missing value, and their percentages use all training rows as the denominator.
+
+```{python}
+#| label: tbl-training-summary
+#| tbl-cap: "Subscription counts and missing predictor values in the training set."
+#| echo: false
+
+subscription_counts = class_counts.rename(index={"yes": "Subscribed (yes)", "no": "Did not subscribe (no)"})
+
+missing_counts = X_train.isna().sum()
+missing_counts = missing_counts[missing_counts.gt(0)].sort_values(ascending=False)
+missing_counts.index = "Missing " + missing_counts.index
+
+training_summary = pd.concat([subscription_counts, missing_counts]).rename("Count").to_frame()
+training_summary.index.name = "Measure"
+training_summary["Percent of training rows"] = (
+    training_summary["Count"].div(len(y_train)).mul(100).round(1)
+)
+training_summary.reset_index()
+```
 
 We compare subscription rates for clients with and without previous campaign contact to explore whether contact history is associated with subscription.
 
@@ -155,28 +247,13 @@ ax.set_ylim(0, subscription_rates.max() * 1.2)
 plt.show()
 ```
 
-In the training set, 23.5% of clients with prior campaign contact subscribed to a term deposit, compared with 9.1% of clients without prior contact (@fig-training-subscription). This difference suggests that contact history may help predict subscription before the first call of the current campaign.
+In the training set, the subscription rate was `{python} f"{subscription_rates['Prior contact']:.1f}%"` for clients with prior campaign contact and `{python} f"{subscription_rates['No prior contact']:.1f}%"` for clients without prior contact (@fig-training-subscription). This difference suggests that contact history may help predict subscription before the first call of the current campaign.
 
 ### Baseline and evaluation metrics
 
-The baseline model always predicts the most common outcome in the training set, which is no subscription. In the training set about 11.7% of clients subscribed to a term deposit, so the baseline model has a training accuracy of about 88.3%, identifying no subscribers.
+The baseline model always predicts the most common outcome in the training set, which is no subscription. The baseline has a training accuracy of `{python} f"{baseline_training_accuracy:.1%}"`.
 
 We use F1-score for the "yes" class as our primary metric to evaluate model performance, because we want to combine both precision and recall of the model. We also report both scores separately.
-
-```{python}
-majority_label = y_train.value_counts().idxmax()
-
-def metrics(y_true, y_pred):
-    return {
-        "F1": f1_score(y_true, y_pred, pos_label="yes", zero_division=0),
-        "Precision": precision_score(
-            y_true, y_pred, pos_label="yes", zero_division=0
-        ),
-        "Recall": recall_score(
-            y_true, y_pred, pos_label="yes", zero_division=0
-        ),
-    }
-```
 
 ### Model fitting
 
@@ -184,70 +261,39 @@ We use logistic regression to calculate the probability that a client will subsc
 
 The pipeline standardizes the numeric predictors, replaces missing categorical values with a “missing” label, and one-hot encodes the categorical predictors. We fit the preprocessor and the model on the training data and reserve the test set for evaluating the final model.
 
-```{python}
-categorical_preprocessor = make_pipeline(
-    SimpleImputer(strategy="constant", fill_value="missing"),
-    OneHotEncoder(handle_unknown="ignore"),
-)
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("numeric", StandardScaler(), numeric_predictors),
-        ("categorical", categorical_preprocessor, categorical_predictors),
-    ]
-)
-
-model = make_pipeline(
-    preprocessor,
-    LogisticRegression(max_iter=1000),
-)
-
-model.fit(X_train, y_train);
-```
-
 # Results
 
 ```{python}
 #| label: tbl-test-performance
 #| tbl-cap: "F1, precision, and recall for the subscription class on the held-out test set."
-X_test = bank_test[predictor_columns]
-y_test = bank_test["y"]
 
-baseline_predictions = [majority_label] * len(y_test)
-model_predictions = model.predict(X_test)
-
-test_results = pd.DataFrame([
-    {"Model": "Majority-class baseline", **metrics(y_test, baseline_predictions)},
-    {"Model": "Logistic regression", **metrics(y_test, model_predictions)},
-])
-
-test_results.set_index("Model").round(3)
+test_results = pd.DataFrame(
+    [baseline_scores, model_scores],
+    index=pd.Index(["Majority-class baseline", "Logistic regression"], name="Model"),
+)
+test_results.round(3)
 ```
 
-The majority-class baseline predicts no subscription for every client, giving it an F1 score and recall of 0. Its precision is undefined because it made no positive predictions, so it is displayed as 0.
+The majority-class baseline predicts no subscription for every client, giving it an F1 score of `{python} f"{baseline_scores['F1']:.3f}"` and a recall of `{python} f"{baseline_scores['Recall']:.1%}"`. It made no positive predictions, so the table uses zero for its undefined precision.
 
-@tbl-test-performance compares logistic regression with the majority-class baseline. Logistic regression achieves a F1 score of 0.250, compared with 0.000 for the majority-class baseline. Of the clients predicted to subscribe, 64.1% actually subscribed. The model identified 164 of the 1,058 actual subscribers, giving it a recall of 15.5%. The confusion matrix (@fig-test-confusion) shows that the remaining 894 subscribers were classified as non-subscribers.
+@tbl-test-performance compares logistic regression with the majority-class baseline. Logistic regression achieves an F1 score of `{python} f"{model_scores['F1']:.3f}"`, compared with `{python} f"{baseline_scores['F1']:.3f}"` for the majority-class baseline. Of the clients predicted to subscribe, `{python} f"{model_scores['Precision']:.1%}"` actually subscribed. The model identified `{python} f"{identified_subscribers:,}"` of the `{python} f"{actual_subscribers:,}"` actual subscribers, giving it a recall of `{python} f"{model_scores['Recall']:.1%}"`. The confusion matrix (@fig-test-confusion) shows that the remaining `{python} f"{missed_subscribers:,}"` subscribers were classified as non-subscribers.
 
 ```{python}
 #| label: fig-test-confusion
 #| fig-cap: "Logistic regression predictions on the held-out test set."
 
-ConfusionMatrixDisplay.from_predictions(
-    y_test,
-    model_predictions,
-    labels=["no", "yes"],
+ConfusionMatrixDisplay(
+    confusion_matrix=test_confusion,
     display_labels=["No subscription", "Subscription"],
-    cmap="Blues",
-    colorbar=False,
-)
+).plot(cmap="Blues", colorbar=False)
 plt.show()
 ```
 
 # Discussion
 
-As we expected, logistic regression performed better than the majority-class baseline on F1-score. Using information available before the first call, it identified 15.5% of subscribers in the test set. The bank could use the model to prioritize clients when it has limited capacity to make calls. Although if it called only clients the model predicted would subscribe, it would have missed 84.5% of the subscribers in the test set.
+As we expected, logistic regression performed better than the majority-class baseline on F1-score. Using information available before the first call, it identified `{python} f"{model_scores['Recall']:.1%}"` of subscribers in the test set. The bank could use the model to prioritize clients when it has limited capacity to make calls. However, if the bank had called only the clients the model predicted would subscribe, it would have missed `{python} f"{missed_subscription_rate:.1%}"` of the subscribers in the test set.
 
-The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results here describe who subscribed among the clients the bank called, it does not necassarily measure whether the calls increased subscriptions. To estimate whether the calls increased subscriptions, a future study could randomly assign clients to a call group or a no-call control group and compare their subscription rates (Sołtys et al., 2015).
+The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results show who subscribed among the clients the bank called. They do not necessarily tell us whether calling increased subscriptions. To estimate whether the calls increased subscriptions, a future study could randomly assign clients to a call group or a no-call control group and compare their subscription rates (Sołtys et al., 2015).
 
 Future work could compare logistic regression with a different baseline, such as predicting subscription for clients whose previous campaign outcome was successful, and with other models such as random forests. We could use cross-validation to test whether adjusting the classification threshold or giving more weight to the subscription class improves F1. We could also compare how many subscribers each model identifies for a fixed number of calls. Finally, we could gather data from different banks and time periods to see whether the results hold across institutions and campaigns.
 
