@@ -21,7 +21,7 @@ from sklearn.metrics import ConfusionMatrixDisplay
 ```
 
 # Summary
-
+In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of 0.250 (64.1% precision and 15.5% recall), outperforming a majority-class baseline that achieved an F1 score of 0.000. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model's low recall means that targeting only predicted subscribers would miss 84.5% of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.
 
 # Introduction
 Term deposits are important financial products offered by banks. However, it is not ideal to successfully track customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation. This is enlightened by previous study which pointed out that machine learning has potential on identifying prospective customers before launching bank telemarketing campaigns, which further support targeted marketing strategies (Tékouabou et al., 2022).
