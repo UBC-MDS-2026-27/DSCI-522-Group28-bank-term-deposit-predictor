@@ -2280,58 +2280,25 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </header>
 
 
-<div id="0132ddd3" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucimlrepo <span class="im">import</span> fetch_ucirepo</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> f1_score, precision_score, recall_score</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, StandardScaler</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> ConfusionMatrixDisplay</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<!-- Run the analysis before Summary so inline expressions have their values. -->
 <section id="summary" class="level1">
 <h1>Summary</h1>
-<p>In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of 0.250 (64.1% precision and 15.5% recall), outperforming a majority-class baseline that achieved an F1 score of 0.000. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model’s low recall means that targeting only predicted subscribers would miss 84.5% of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.</p>
+<p>In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of 0.250 (64.1% precision and 15.5% recall). The majority-class baseline achieved an F1 score of 0.000. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model’s low recall means that targeting only predicted subscribers would miss 84.5% of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.</p>
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Term deposits are important financial products offered by banks. However, it is not ideal to successfully track customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation. This is enlightened by previous study which pointed out that machine learning has potential on identifying prospective customers before launching bank telemarketing campaigns, which further support targeted marketing strategies (Tékouabou et al., 2022).</p>
-<p>This project aims at predicting, before the first contact with clients in the current campaign, whether customers would subscribe to term deposits during the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customers’ demographics, financial, and historical campaign information. Target variable y measures whether a customer subscribes or not (yes or no). In order to prevent unavailable information in predictions, current campaign contact information is excluded. Recent research also discussed predictive models and interpretability analysis can support more effective marketing decisions. (Xie et al., 2023)</p>
+<p>Term deposits are important financial products offered by banks. However, it is still challenging to identify customers who are likely to subscribe through direct marketing campaigns. To address this challenge, we use classification model to predict which customers are likely to subscribe based on a series of their characteristics. This would help banks improve marketing efficiency and effective resource allocation. This approach is motivated by previous research suggesting that machine learning can identify prospective customers before bank telemarketing campaigns, which supports more targeted marketing strategies (Tékouabou et al., 2022).</p>
+<p>This project aims at predicting whether customers will subscribe to term deposits during a marketing campaign, provided with information before their first contact in the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customer demographic characteristics, financial information, and historical campaign data. The target variable indicates whether a customer subscribes to a term deposit (yes or no). To prevent data leakage, before the first customer contact the information from current campaign is excluded. Recent research has also highlighted how predictive models and model interpretability can support more effective marketing decisions (Xie et al., 2023).</p>
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>The data set used in this project is the Bank Marketing data set, created by Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning Repository and can be found <a href="https://doi.org/10.24432/C5K306">here</a>. Each row is one client of a Portuguese bank who was contacted in a direct marketing campaign. The columns include client details (e.g., age, job, education), details about the contact (e.g., contact type, month, duration), and whether the client subscribed to a term deposit (yes or no).</p>
-<p>We download the data with the code below and save unchanged in <code>data/raw/</code>.</p>
-<div id="960eaf73" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create folders if they don&#39;t exist</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="op">=</span> Path(<span class="st">&quot;../data/raw&quot;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>raw_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">&quot;../data/processed&quot;</span>).mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Download bank marketing data</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>bank_marketing <span class="op">=</span> fetch_ucirepo(<span class="bu">id</span><span class="op">=</span><span class="dv">222</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># join feature and target columns</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> pd.concat(</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    [bank_marketing.data.features, bank_marketing.data.targets],</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the raw data</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>bank.to_csv(raw_dir <span class="op">/</span> <span class="st">&quot;bank_marketing.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="cacdfac6" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the raw data</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> pd.read_csv(<span class="st">&quot;../data/raw/bank_marketing.csv&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>bank.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<p>Rendering the report downloads the data and saves a raw copy in <code>data/raw/</code>.</p>
+<div id="f54b0328" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bank.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -2469,70 +2436,94 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
 <p>We drop the <code>duration</code> column, because the call length is only known after the call has ended, so it cannot be used to predict the outcome of a new call. We then split the data into a training set (80%) and a test set (20%). The split is stratified on the target, so both sets have the same share of “yes” and “no”. All exploration and model fitting use the training set only.</p>
-<div id="b782371f" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># drop duration: it is only known after the call</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> bank.drop(columns<span class="op">=</span>[<span class="st">&quot;duration&quot;</span>])</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># split into training (80%) and test (20%) sets</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># stratify keeps the &quot;yes&quot;/&quot;no&quot; share the same in both sets</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>bank_train, bank_test <span class="op">=</span> train_test_split(</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    bank, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>bank[<span class="st">&quot;y&quot;</span>], random_state<span class="op">=</span><span class="dv">522</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># save the split data</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>bank_train.to_csv(<span class="st">&quot;../data/processed/bank_train.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>bank_test.to_csv(<span class="st">&quot;../data/processed/bank_test.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <section id="predictors-and-target" class="level3">
 <h3 class="anchored" data-anchor-id="predictors-and-target">Predictors and target</h3>
 <p>We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is ‘yes’, meaning the client subscribed. We use client characteristics (age, occupation, marital status, and education), financial information (average yearly account balance, credit default status, and whether the client has a housing loan or a personal loan), and previous campaign history (the number of prior contacts, the number of days since the last prior contact, and the previous campaign outcome). We exclude the current campaign’s recorded contact method, contact date, number of contacts, and call duration because these details are unavailable at the time of prediction.</p>
-<div id="ee37e0fc" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>numeric_predictors <span class="op">=</span> [</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;age&quot;</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;balance&quot;</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;pdays&quot;</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;previous&quot;</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>categorical_predictors <span class="op">=</span> [</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;job&quot;</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;marital&quot;</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;education&quot;</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;default&quot;</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;housing&quot;</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;loan&quot;</span>,</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;poutcome&quot;</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>predictor_columns <span class="op">=</span> numeric_predictors <span class="op">+</span> categorical_predictors</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> bank_train[predictor_columns]</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> bank_train[<span class="st">&quot;y&quot;</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
 <section id="training-data-exploration" class="level3">
 <h3 class="anchored" data-anchor-id="training-data-exploration">Training data exploration</h3>
+<p><a href="#tbl-training-summary" class="quarto-xref">Table 1</a> shows that the training set contains 36,168 clients, of whom 4,231 (11.7%) subscribed to a term deposit. The table also summarizes missing values by predictor. The missing-value rows below include only predictors with at least one missing value, and their percentages use all training rows as the denominator.</p>
+<div class="cell" data-execution_count="9">
+<div id="tbl-training-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="9">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-training-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 1: Subscription counts and missing predictor values in the training set.
+</figcaption>
+<div aria-describedby="tbl-training-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe cell caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Measure</th>
+<th data-quarto-table-cell-role="th">Count</th>
+<th data-quarto-table-cell-role="th">Percent of training rows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Subscribed (yes)</td>
+<td>4231</td>
+<td>11.7</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Did not subscribe (no)</td>
+<td>31937</td>
+<td>88.3</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Missing poutcome</td>
+<td>29567</td>
+<td>81.7</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Missing education</td>
+<td>1463</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Missing job</td>
+<td>232</td>
+<td>0.6</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
 <p>We compare subscription rates for clients with and without previous campaign contact to explore whether contact history is associated with subscription.</p>
-<div id="cell-fig-training-subscription" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>prior_contact <span class="op">=</span> bank_train[<span class="st">&quot;previous&quot;</span>].gt(<span class="dv">0</span>).<span class="bu">map</span>({</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">False</span>: <span class="st">&quot;No prior contact&quot;</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">True</span>: <span class="st">&quot;Prior contact&quot;</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>subscription_rates <span class="op">=</span> (</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    bank_train[<span class="st">&quot;y&quot;</span>].eq(<span class="st">&quot;yes&quot;</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    .groupby(prior_contact)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    .mean()</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    .mul(<span class="dv">100</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.bar(subscription_rates.index, subscription_rates.values)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>ax.bar_label(bars, fmt<span class="op">=</span><span class="st">&quot;</span><span class="sc">%.1f%%</span><span class="st">&quot;</span>, padding<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&quot;Previous campaign contact&quot;</span>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&quot;Clients who subscribed (%)&quot;</span>)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">0</span>, subscription_rates.<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.2</span>)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-training-subscription" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>prior_contact <span class="op">=</span> bank_train[<span class="st">&quot;previous&quot;</span>].gt(<span class="dv">0</span>).<span class="bu">map</span>({</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">False</span>: <span class="st">&quot;No prior contact&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">True</span>: <span class="st">&quot;Prior contact&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>subscription_rates <span class="op">=</span> (</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    bank_train[<span class="st">&quot;y&quot;</span>].eq(<span class="st">&quot;yes&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    .groupby(prior_contact)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    .mean()</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    .mul(<span class="dv">100</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>bars <span class="op">=</span> ax.bar(subscription_rates.index, subscription_rates.values)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>ax.bar_label(bars, fmt<span class="op">=</span><span class="st">&quot;</span><span class="sc">%.1f%%</span><span class="st">&quot;</span>, padding<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&quot;Previous campaign contact&quot;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&quot;Clients who subscribed (%)&quot;</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">0</span>, subscription_rates.<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.2</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-training-subscription" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2546,76 +2537,35 @@ Figure 1: Term-deposit subscription rates by previous campaign contact in the t
 </div>
 </div>
 </div>
-<p>In the training set, 23.5% of clients with prior campaign contact subscribed to a term deposit, compared with 9.1% of clients without prior contact (<a href="#fig-training-subscription" class="quarto-xref">Figure 1</a>). This difference suggests that contact history may help predict subscription before the first call of the current campaign.</p>
+<p>In the training set, the subscription rate was 23.5% for clients with prior campaign contact and 9.1% for clients without prior contact (<a href="#fig-training-subscription" class="quarto-xref">Figure 1</a>). This difference suggests that contact history may help predict subscription before the first call of the current campaign.</p>
 </section>
 <section id="baseline-and-evaluation-metrics" class="level3">
 <h3 class="anchored" data-anchor-id="baseline-and-evaluation-metrics">Baseline and evaluation metrics</h3>
-<p>The baseline model always predicts the most common outcome in the training set, which is no subscription. In the training set about 11.7% of clients subscribed to a term deposit, so the baseline model has a training accuracy of about 88.3%, identifying no subscribers.</p>
+<p>The baseline model always predicts the most common outcome in the training set, which is no subscription. The baseline has a training accuracy of 88.3%.</p>
 <p>We use F1-score for the “yes” class as our primary metric to evaluate model performance, because we want to combine both precision and recall of the model. We also report both scores separately.</p>
-<div id="44b03b82" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>majority_label <span class="op">=</span> y_train.value_counts().idxmax()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metrics(y_true, y_pred):</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;F1&quot;</span>: f1_score(y_true, y_pred, pos_label<span class="op">=</span><span class="st">&quot;yes&quot;</span>, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Precision&quot;</span>: precision_score(</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>            y_true, y_pred, pos_label<span class="op">=</span><span class="st">&quot;yes&quot;</span>, zero_division<span class="op">=</span><span class="dv">0</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Recall&quot;</span>: recall_score(</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            y_true, y_pred, pos_label<span class="op">=</span><span class="st">&quot;yes&quot;</span>, zero_division<span class="op">=</span><span class="dv">0</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
 <section id="model-fitting" class="level3">
 <h3 class="anchored" data-anchor-id="model-fitting">Model fitting</h3>
 <p>We use logistic regression to calculate the probability that a client will subscribe to a term deposit. This model choice makes sense because the outcome has two possible values, yes and no, with yes as the positive class.</p>
 <p>The pipeline standardizes the numeric predictors, replaces missing categorical values with a “missing” label, and one-hot encodes the categorical predictors. We fit the preprocessor and the model on the training data and reserve the test set for evaluating the final model.</p>
-<div id="a871a432" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>categorical_preprocessor <span class="op">=</span> make_pipeline(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    SimpleImputer(strategy<span class="op">=</span><span class="st">&quot;constant&quot;</span>, fill_value<span class="op">=</span><span class="st">&quot;missing&quot;</span>),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">&quot;ignore&quot;</span>),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        (<span class="st">&quot;numeric&quot;</span>, StandardScaler(), numeric_predictors),</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        (<span class="st">&quot;categorical&quot;</span>, categorical_preprocessor, categorical_predictors),</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> make_pipeline(</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    preprocessor,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>),</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
 </section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
-<div class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> bank_test[predictor_columns]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> bank_test[<span class="st">&quot;y&quot;</span>]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>baseline_predictions <span class="op">=</span> [majority_label] <span class="op">*</span> <span class="bu">len</span>(y_test)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>model_predictions <span class="op">=</span> model.predict(X_test)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>test_results <span class="op">=</span> pd.DataFrame([</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;Model&quot;</span>: <span class="st">&quot;Majority-class baseline&quot;</span>, <span class="op">**</span>metrics(y_test, baseline_predictions)},</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&quot;Model&quot;</span>: <span class="st">&quot;Logistic regression&quot;</span>, <span class="op">**</span>metrics(y_test, model_predictions)},</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>test_results.set_index(<span class="st">&quot;Model&quot;</span>).<span class="bu">round</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="tbl-test-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="9">
+<div class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>test_results <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    [baseline_scores, model_scores],</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>pd.Index([<span class="st">&quot;Majority-class baseline&quot;</span>, <span class="st">&quot;Logistic regression&quot;</span>], name<span class="op">=</span><span class="st">&quot;Model&quot;</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>test_results.<span class="bu">round</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-test-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="11">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-test-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 1: F1, precision, and recall for the subscription class on the held-out test set.
+Table 2: F1, precision, and recall for the subscription class on the held-out test set.
 </figcaption>
 <div aria-describedby="tbl-test-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -2656,18 +2606,14 @@ Table 1: F1, precision, and recall for the subscription class on the held-out t
 </figure>
 </div>
 </div>
-<p>The majority-class baseline predicts no subscription for every client, giving it an F1 score and recall of 0. Its precision is undefined because it made no positive predictions, so it is displayed as 0.</p>
-<p><a href="#tbl-test-performance" class="quarto-xref">Table 1</a> compares logistic regression with the majority-class baseline. Logistic regression achieves a F1 score of 0.250, compared with 0.000 for the majority-class baseline. Of the clients predicted to subscribe, 64.1% actually subscribed. The model identified 164 of the 1,058 actual subscribers, giving it a recall of 15.5%. The confusion matrix (<a href="#fig-test-confusion" class="quarto-xref">Figure 2</a>) shows that the remaining 894 subscribers were classified as non-subscribers.</p>
-<div id="cell-fig-test-confusion" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ConfusionMatrixDisplay.from_predictions(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    y_test,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    model_predictions,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>[<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>],</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    display_labels<span class="op">=</span>[<span class="st">&quot;No subscription&quot;</span>, <span class="st">&quot;Subscription&quot;</span>],</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">&quot;Blues&quot;</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    colorbar<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The majority-class baseline predicts no subscription for every client, giving it an F1 score of 0.000 and a recall of 0.0%. It made no positive predictions, so the table uses zero for its undefined precision.</p>
+<p><a href="#tbl-test-performance" class="quarto-xref">Table 2</a> compares logistic regression with the majority-class baseline. Logistic regression achieves an F1 score of 0.250, compared with 0.000 for the majority-class baseline. Of the clients predicted to subscribe, 64.1% actually subscribed. The model identified 164 of the 1,058 actual subscribers, giving it a recall of 15.5%. The confusion matrix (<a href="#fig-test-confusion" class="quarto-xref">Figure 2</a>) shows that the remaining 894 subscribers were classified as non-subscribers.</p>
+<div id="cell-fig-test-confusion" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ConfusionMatrixDisplay(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    confusion_matrix<span class="op">=</span>test_confusion,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    display_labels<span class="op">=</span>[<span class="st">&quot;No subscription&quot;</span>, <span class="st">&quot;Subscription&quot;</span>],</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>).plot(cmap<span class="op">=</span><span class="st">&quot;Blues&quot;</span>, colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-test-confusion" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2684,8 +2630,8 @@ Figure 2: Logistic regression predictions on the held-out test set.
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
-<p>As we expected, logistic regression performed better than the majority-class baseline on F1-score. Using information available before the first call, it identified 15.5% of subscribers in the test set. The bank could use the model to prioritize clients when it has limited capacity to make calls. Although if it called only clients the model predicted would subscribe, it would have missed 84.5% of the subscribers in the test set.</p>
-<p>The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results here describe who subscribed among the clients the bank called, it does not necassarily measure whether the calls increased subscriptions. To estimate whether the calls increased subscriptions, a future study could randomly assign clients to a call group or a no-call control group and compare their subscription rates (Sołtys et al., 2015).</p>
+<p>As we expected, logistic regression performed better than the majority-class baseline on F1-score. Using information available before the first call, it identified 15.5% of subscribers in the test set. The bank could use the model to prioritize clients when it has limited capacity to make calls. However, if the bank had called only the clients the model predicted would subscribe, it would have missed 84.5% of the subscribers in the test set.</p>
+<p>The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results show who subscribed among the clients the bank called. They do not necessarily tell us whether calling increased subscriptions. To estimate whether the calls increased subscriptions, a future study could randomly assign clients to a call group or a no-call control group and compare their subscription rates (Sołtys et al., 2015).</p>
 <p>Future work could compare logistic regression with a different baseline, such as predicting subscription for clients whose previous campaign outcome was successful, and with other models such as random forests. We could use cross-validation to test whether adjusting the classification threshold or giving more weight to the subscription class improves F1. We could also compare how many subscribers each model identifies for a fixed number of calls. Finally, we could gather data from different banks and time periods to see whether the results hold across institutions and campaigns.</p>
 </section>
 <section id="references" class="level1">
