@@ -247,7 +247,7 @@ plt.show()
 
 As we expected, logistic regression performed better than the majority-class baseline on F1-score. Using information available before the first call, it identified 15.5% of subscribers in the test set. The bank could use the model to prioritize clients when it has limited capacity to make calls. Although if it called only clients the model predicted would subscribe, it would have missed 84.5% of the subscribers in the test set.
 
-The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results here describe who subscribed among the clients the bank called, it does not necassarily measure whether the calls increased subscriptions.
+The data comes from one Portuguese banking institution, and the test set is a random sample of the same dataset. The model may perform differently for different campaigns or other banking institutions. The results here describe who subscribed among the clients the bank called, it does not necassarily measure whether the calls increased subscriptions. To estimate whether the calls increased subscriptions, a future study could randomly assign clients to a call group or a no-call control group and compare their subscription rates (Sołtys et al., 2015).
 
 Future work could compare logistic regression with a different baseline, such as predicting subscription for clients whose previous campaign outcome was successful, and with other models such as random forests. We could use cross-validation to test whether adjusting the classification threshold or giving more weight to the subscription class improves F1. We could also compare how many subscribers each model identifies for a fixed number of calls. Finally, we could gather data from different banks and time periods to see whether the results hold across institutions and campaigns.
 
@@ -259,3 +259,5 @@ Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine L
 Tékouabou, S. C. K., Gherghina, Ș. C., Toulni, H., Mata, P. N., Mata, M. N., & Martins, J. M. (2022). A machine learning framework towards bank telemarketing prediction. Journal of Risk and Financial Management, 15(6), 269. <https://doi.org/10.3390/jrfm15060269>
 
 Xie, C., Zhang, J.-L., Zhu, Y., Xiong, B., & Wang, G.-J. (2023). How to improve the success of bank telemarketing? Prediction and interpretability analysis based on machine learning. Computers & Industrial Engineering, 175, 108874. <https://doi.org/10.1016/j.cie.2022.108874>
+
+Sołtys, M., Jaroszewicz, S., & Rzepakowski, P. (2015). Ensemble methods for uplift modeling. Data Mining and Knowledge Discovery, 29(6), 1531–1559. <https://www.researchgate.net/publication/282845041_Ensemble_methods_for_uplift_modeling>
