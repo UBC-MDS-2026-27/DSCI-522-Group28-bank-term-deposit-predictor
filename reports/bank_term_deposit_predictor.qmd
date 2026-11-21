@@ -156,9 +156,9 @@ missed_subscription_rate = 1 - model_scores["Recall"]
 In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of `{python} f"{model_scores['F1']:.3f}"` (`{python} f"{model_scores['Precision']:.1%}"` precision and `{python} f"{model_scores['Recall']:.1%}"` recall). The majority-class baseline achieved an F1 score of `{python} f"{baseline_scores['F1']:.3f}"`. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model's low recall means that targeting only predicted subscribers would miss `{python} f"{missed_subscription_rate:.1%}"` of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.
 
 # Introduction
-Term deposits are important financial products offered by banks. However, it is still challenging to identify customers who are likely to subscribe through direct marketing campaigns. To address this challenge, we use classification model to predict which customers are likely to subscribe based on a series of their characteristics. This would help banks improve marketing efficiency and effective resource allocation. This approach is motivated by previous research suggesting that machine learning can identify prospective customers before bank telemarketing campaigns, which supports more targeted marketing strategies (Tékouabou et al., 2022).
+Term deposits are important financial products offered by banks. However, it is still challenging to identify customers who are likely to subscribe through direct marketing campaigns. To address this challenge, we use a classification model to predict which customers are likely to subscribe based on a series of their characteristics. This would help banks improve marketing efficiency and effective resource allocation. This approach is motivated by previous research suggesting that machine learning can identify prospective customers before bank telemarketing campaigns, which supports more targeted marketing strategies (Tékouabou et al., 2022).
 
-This project aims at predicting whether customers will subscribe to term deposits during a marketing campaign, provided with information before their first contact in the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customer demographic characteristics, financial information, and historical campaign data. The target variable indicates whether a customer subscribes to a term deposit (yes or no). To prevent data leakage, before the first customer contact the information from current campaign is excluded. Recent research has also highlighted how predictive models and model interpretability can support more effective marketing decisions (Xie et al., 2023).
+This project aims at predicting whether customers will subscribe to term deposits during a marketing campaign, provided with information before their first contact in the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customer demographic characteristics, financial information, and historical campaign data. The target variable indicates whether a customer subscribes to a term deposit (yes or no). To prevent data leakage, we exclude information from the current campaign, because it is not known before the first contact. Recent research has also highlighted how predictive models and model interpretability can support more effective marketing decisions (Xie et al., 2023).
 
 # Methods
 
@@ -180,7 +180,7 @@ bank.head()
 
 ## Analysis
 
-We drop the `duration` column, because the call length is only known after the
+We drop the call duration column, because the call length is only known after the
 call has ended, so it cannot be used to predict the outcome of a new call.
 We then split the data into a training set (`{python} f"{1 - test_fraction:.0%}"`) and a test set (`{python} f"{test_fraction:.0%}"`). The
 split is stratified on the target, so both sets have the same share of "yes"
@@ -300,10 +300,10 @@ Future work could compare logistic regression with a different baseline, such as
 # References
 
 
-Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C5K306>.
+Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C5K306>
 
 Tékouabou, S. C. K., Gherghina, Ș. C., Toulni, H., Mata, P. N., Mata, M. N., & Martins, J. M. (2022). A machine learning framework towards bank telemarketing prediction. Journal of Risk and Financial Management, 15(6), 269. <https://doi.org/10.3390/jrfm15060269>
 
 Xie, C., Zhang, J.-L., Zhu, Y., Xiong, B., & Wang, G.-J. (2023). How to improve the success of bank telemarketing? Prediction and interpretability analysis based on machine learning. Computers & Industrial Engineering, 175, 108874. <https://doi.org/10.1016/j.cie.2022.108874>
 
-Sołtys, M., Jaroszewicz, S., & Rzepakowski, P. (2015). Ensemble methods for uplift modeling. Data Mining and Knowledge Discovery, 29(6), 1531–1559. <https://www.researchgate.net/publication/282845041_Ensemble_methods_for_uplift_modeling>
+Sołtys, M., Jaroszewicz, S., & Rzepakowski, P. (2015). Ensemble methods for uplift modeling. Data Mining and Knowledge Discovery, 29(6), 1531–1559. <https://doi.org/10.1007/s10618-014-0383-9>

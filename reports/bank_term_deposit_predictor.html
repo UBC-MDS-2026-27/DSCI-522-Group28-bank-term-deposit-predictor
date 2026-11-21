@@ -2287,8 +2287,8 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Term deposits are important financial products offered by banks. However, it is still challenging to identify customers who are likely to subscribe through direct marketing campaigns. To address this challenge, we use classification model to predict which customers are likely to subscribe based on a series of their characteristics. This would help banks improve marketing efficiency and effective resource allocation. This approach is motivated by previous research suggesting that machine learning can identify prospective customers before bank telemarketing campaigns, which supports more targeted marketing strategies (Tékouabou et al., 2022).</p>
-<p>This project aims at predicting whether customers will subscribe to term deposits during a marketing campaign, provided with information before their first contact in the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customer demographic characteristics, financial information, and historical campaign data. The target variable indicates whether a customer subscribes to a term deposit (yes or no). To prevent data leakage, before the first customer contact the information from current campaign is excluded. Recent research has also highlighted how predictive models and model interpretability can support more effective marketing decisions (Xie et al., 2023).</p>
+<p>Term deposits are important financial products offered by banks. However, it is still challenging to identify customers who are likely to subscribe through direct marketing campaigns. To address this challenge, we use a classification model to predict which customers are likely to subscribe based on a series of their characteristics. This would help banks improve marketing efficiency and effective resource allocation. This approach is motivated by previous research suggesting that machine learning can identify prospective customers before bank telemarketing campaigns, which supports more targeted marketing strategies (Tékouabou et al., 2022).</p>
+<p>This project aims at predicting whether customers will subscribe to term deposits during a marketing campaign, provided with information before their first contact in the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customer demographic characteristics, financial information, and historical campaign data. The target variable indicates whether a customer subscribes to a term deposit (yes or no). To prevent data leakage, we exclude information from the current campaign, because it is not known before the first contact. Recent research has also highlighted how predictive models and model interpretability can support more effective marketing decisions (Xie et al., 2023).</p>
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
@@ -2296,7 +2296,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>The data set used in this project is the Bank Marketing data set, created by Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning Repository and can be found <a href="https://doi.org/10.24432/C5K306">here</a>. Each row is one client of a Portuguese bank who was contacted in a direct marketing campaign. The columns include client details (e.g., age, job, education), details about the contact (e.g., contact type, month, duration), and whether the client subscribed to a term deposit (yes or no).</p>
 <p>Rendering the report downloads the data and saves a raw copy in <code>data/raw/</code>.</p>
-<div id="f54b0328" class="cell" data-execution_count="8">
+<div id="69ee308f" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bank.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
@@ -2435,7 +2435,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </section>
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
-<p>We drop the <code>duration</code> column, because the call length is only known after the call has ended, so it cannot be used to predict the outcome of a new call. We then split the data into a training set (80%) and a test set (20%). The split is stratified on the target, so both sets have the same share of “yes” and “no”. All exploration and model fitting use the training set only.</p>
+<p>We drop the call duration column, because the call length is only known after the call has ended, so it cannot be used to predict the outcome of a new call. We then split the data into a training set (80%) and a test set (20%). The split is stratified on the target, so both sets have the same share of “yes” and “no”. All exploration and model fitting use the training set only.</p>
 <section id="predictors-and-target" class="level3">
 <h3 class="anchored" data-anchor-id="predictors-and-target">Predictors and target</h3>
 <p>We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is ‘yes’, meaning the client subscribed. We use client characteristics (age, occupation, marital status, and education), financial information (average yearly account balance, credit default status, and whether the client has a housing loan or a personal loan), and previous campaign history (the number of prior contacts, the number of days since the last prior contact, and the previous campaign outcome). We exclude the current campaign’s recorded contact method, contact date, number of contacts, and call duration because these details are unavailable at the time of prediction.</p>
@@ -2636,10 +2636,10 @@ Figure 2: Logistic regression predictions on the held-out test set.
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
-<p>Moro, S., Rita, P., &amp; Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <a href="https://doi.org/10.24432/C5K306" class="uri">https://doi.org/10.24432/C5K306</a>.</p>
+<p>Moro, S., Rita, P., &amp; Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <a href="https://doi.org/10.24432/C5K306" class="uri">https://doi.org/10.24432/C5K306</a></p>
 <p>Tékouabou, S. C. K., Gherghina, Ș. C., Toulni, H., Mata, P. N., Mata, M. N., &amp; Martins, J. M. (2022). A machine learning framework towards bank telemarketing prediction. Journal of Risk and Financial Management, 15(6), 269. <a href="https://doi.org/10.3390/jrfm15060269" class="uri">https://doi.org/10.3390/jrfm15060269</a></p>
 <p>Xie, C., Zhang, J.-L., Zhu, Y., Xiong, B., &amp; Wang, G.-J. (2023). How to improve the success of bank telemarketing? Prediction and interpretability analysis based on machine learning. Computers &amp; Industrial Engineering, 175, 108874. <a href="https://doi.org/10.1016/j.cie.2022.108874" class="uri">https://doi.org/10.1016/j.cie.2022.108874</a></p>
-<p>Sołtys, M., Jaroszewicz, S., &amp; Rzepakowski, P. (2015). Ensemble methods for uplift modeling. Data Mining and Knowledge Discovery, 29(6), 1531–1559. <a href="https://www.researchgate.net/publication/282845041_Ensemble_methods_for_uplift_modeling" class="uri">https://www.researchgate.net/publication/282845041_Ensemble_methods_for_uplift_modeling</a></p>
+<p>Sołtys, M., Jaroszewicz, S., &amp; Rzepakowski, P. (2015). Ensemble methods for uplift modeling. Data Mining and Knowledge Discovery, 29(6), 1531–1559. <a href="https://doi.org/10.1007/s10618-014-0383-9" class="uri">https://doi.org/10.1007/s10618-014-0383-9</a></p>
 </section>
 
 </main>

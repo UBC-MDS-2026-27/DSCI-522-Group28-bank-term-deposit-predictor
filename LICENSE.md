@@ -9,7 +9,7 @@ This repository uses dual licensing to cover both the codebase and the documenta
 
 ## 1. Code License: MIT License
 
-Copyright (c) 2026 [Du Du, Indervir Dhillon, Rohit Bansal, Kshitij Agarwal]
+Copyright (c) 2026 Du Du, Indervir Dhillon, Rohit Bansal, Kshitij Agarwal
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ SOFTWARE.
 
 ## 2. Report & Documentation License: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
 
-Copyright (c) 2026 [Du Du, Indervir Dhillon, Rohit Bansal, Kshitij Agarwal]
+Copyright (c) 2026 Du Du, Indervir Dhillon, Rohit Bansal, Kshitij Agarwal
 
 By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License ("Public License"). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
 

@@ -1,9 +1,7 @@
-# DSCI-522-Group28-bank-term-deposit-predictor
-
-## Bank Term Deposit Predictor
+# Bank Term Deposit Predictor
 
 ## Authors: 
-Du Du, Kshitij Agarwal, Indervir Dhillon, Rohit Bansal (Ordered by first name)
+Du Du, Kshitij Agarwal, Indervir Dhillon, Rohit Bansal
 
 ## Summary: 
 This project asks whether a client will subscribe to a bank term deposit given the information available before a telephone marketing call is made. We use the Bank Marketing dataset from the UCI Machine Learning Repository, which records 45,211 clients who have been contacted by a Portuguese bank. 
@@ -48,7 +46,7 @@ Python packages, including Jupyter, pandas, and scikit-learn, are declared in `p
 See [LICENSE.md](LICENSE.md) for the license terms.
 
 ## AI use statement:
-We used ChatGPT 6.0, to help the project for uv, Quarto, and examples of Code of Conduct.
+We used ChatGPT 6.0 to help the project for uv, Quarto, and examples of Code of Conduct.
 We used it in the Contributing.md, License.md to develop the structure and base text.
 All AI-generated changes were reviewed, tested, and edited by our members, who take full responsibility for the content of the repository.
 
