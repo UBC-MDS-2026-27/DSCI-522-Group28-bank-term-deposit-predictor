@@ -31,12 +31,12 @@ If you find a new bug, please open a new Issue using the following guidelines:
 
 1. **Title**: Provide a clear, descriptive title.
 2. **Environment**: Include details about your setup:
-   - Python version (e.g., Python 3.10)
+   - Python, uv, and Quarto versions
    - Operating System (Windows, macOS, Linux)
-   - Key library versions (e.g., `pandas`, `scikit-learn`, `xgboost`)
+   - Key library versions (e.g., `pandas`, `scikit-learn`, `matplotlib`)
 3. **Steps to Reproduce**: List exact steps to reproduce the error, including data inputs or script execution commands.
 4. **Expected vs. Actual Behavior**: Describe what you expected to happen versus what actually occurred.
-5. **Traceback / Error Log**: Copy and paste the full error traceback inside code blocks (\`\`\`).
+5. **Traceback / Error Log**: Copy and paste the full error traceback inside a fenced code block.
 
 ---
 
@@ -46,7 +46,7 @@ Ideas for model improvements, novel feature engineering techniques, new evaluati
 
 To suggest a change:
 1. Open a new issue with the title prefix `[Feature Suggestion]: <Brief Title>`.
-2. Explain the rationale behind the feature (e.g., handling class imbalance in subscription data, trying a new classifier like LightGBM).
+2. Explain the rationale behind the feature (e.g., handling class imbalance in subscription data, comparing classification thresholds).
 3. Outline potential implementation details or data requirements.
 4. Discuss the suggestion with maintainers before starting work on major pull requests.
 
@@ -54,72 +54,60 @@ To suggest a change:
 
 ## Development Setup
 
-Follow these steps to set up your local development environment:
+1. Install Git, uv 0.13.9, and Quarto 1.10.18 as described in the [README](README.md).
+2. Clone the team repository.
 
-1. **Fork and Clone the Repository**:
    ```bash
    git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group28-bank-term-deposit-predictor.git
    cd DSCI-522-Group28-bank-term-deposit-predictor
    ```
 
-2. **Create a Virtual Environment**:
-   ```bash
-   # Create a virtual environment using uv
-   uv venv
+3. Install the locked Python 3.14 dependencies from the repository root.
 
-   # Activate the environment
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```bash
+   uv sync --locked --python 3.14
    ```
 
-3. **Install Dependencies**:
+4. Render the report from the repository root.
+
    ```bash
-   # Sync environment with pyproject.toml and uv.lock
-   uv sync
+   uv run --locked quarto render reports/bank_term_deposit_predictor.qmd --to html
    ```
 
-4. **Prepare Data**:
-   Ensure the banking dataset is placed in the designated `data/raw/` directory (do not commit raw user data to version control).
+   Rendering downloads the public Bank Marketing dataset from the UCI Machine Learning Repository, writes `data/raw/bank_marketing.csv`, and generates the train and test splits in `data/processed/`. An internet connection is required for the download. Open `reports/bank_term_deposit_predictor.html` to inspect the result.
 
 ---
 
 ## Workflow for Submitting Changes
 
-All contributions are handled via Git branches and Pull Requests (PRs).
+Team members work on branches in the shared repository and submit changes through pull requests.
 
-### 1. Create a Topic Branch
-Create a branch with a descriptive name off `main`:
-```bash
-git checkout -b feature/smote-imbalance-handling
-# or
-git checkout -b fix/data-preprocessing-nulls
-```
+1. **Create a branch from the latest `main`.**
 
-### 2. Make Your Changes
-- Write clean, modular Python code.
-- Ensure scripts under `analysis/` are well-documented.
-
-### 3. Commit Guidelines
-Write meaningful, concise commit messages:
-- Good: `feat: Add SMOTE resampling to handles target class imbalance`
-- Good: `fix: Correct target column encoding in preprocessing pipeline`
-- Avoid: `updated code` or `fixed stuff`
-
-### 4. Push and Open a Pull Request
-1. Push your branch to your fork:
    ```bash
-   git push origin feature/your-feature-name
+   git switch main
+   git pull --ff-only origin main
+   git switch -c fix/report-metrics
    ```
-2. Navigate to the original repository on GitHub and click **Compare & Pull Request**.
-3. Fill out the PR template, detailing what changes were made and why.
-4. Link any related issues (e.g., `Closes #12`).
+
+2. **Make and verify your changes.** The Quarto source and rendered HTML live in `reports/`. If you change the analysis or report, render it again and review the HTML before committing.
+3. **Commit with a descriptive message.** For example, use `fix: Compute report metrics inline`.
+4. **Push your branch to the team repository.**
+
+   ```bash
+   git push -u origin fix/report-metrics
+   ```
+
+5. **Open a pull request into `main`.** In the description, summarize what changed, explain why, list what you verified, and link any related issues. Ask a teammate to review the pull request before merging.
 
 ---
 
 ## Code and Data Standards
 
-- **Code Formatting**: Follow standard **PEP 8** guidelines for Python code. Use `black` or `flake8` for formatting where applicable.
-- **Data Privacy**: Never commit sensitive or raw personal banking datasets containing PII (Personally Identifiable Information) directly to GitHub. Use `.gitignore` to keep raw data files out of version control.
-- **Reproducibility**: Set random seeds (`random_state=42`) across all stochastic operations (e.g., train-test splits, model initialization, cross-validation).
+- Follow PEP 8 for Python code. Keep the report's analysis easy to follow.
+- The project tracks the public UCI Bank Marketing CSV in `data/raw/`. Keep its source and filename consistent with the report. Keep confidential data and personally identifiable information out of the repository.
+- Use `random_state=522` for the report's stratified train/test split so contributors can reproduce the same rows. Explain intentional changes to the split in the pull request.
+- If you change a Python dependency, update `pyproject.toml` and `uv.lock` together.
 
 ---
 
@@ -147,4 +135,4 @@ If you used Generative AI tools to significantly generate or refactor code, note
 
 ---
 
-Thank you for contributing to the Bank Subscription Classification project! If you have any questions, feel free to open a discussion issue.
+Thank you for contributing to the Bank Term Deposit Predictor project! If you have any questions, feel free to open a discussion issue.
