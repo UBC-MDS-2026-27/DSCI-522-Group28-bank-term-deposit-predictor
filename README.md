@@ -40,7 +40,3 @@ MIT License, Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 Intern
 We used ChatGPT 6.0, to help the project for uv, Quarto, and examples of Code of Conduct.
 We used it in the Contributing.md, License.md to develop the structure and base text.
 All AI-generated changes were reviewed, tested, and edited by our members, who take fully responsibility for the content of the repository.
-
-
-## Link to the rendered report (e.g., your GitHub Pages URL).
-file:///Users/nexodu/Downloads/DSCI-522-Group28-bank-term-deposit-predictor-main/reports/bank_term_deposit_predictor.html
