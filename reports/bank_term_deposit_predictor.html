@@ -2280,7 +2280,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </header>
 
 
-<div id="86183a58" class="cell" data-execution_count="1">
+<div id="0132ddd3" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucimlrepo <span class="im">import</span> fetch_ucirepo</span>
@@ -2296,6 +2296,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 </div>
 <section id="summary" class="level1">
 <h1>Summary</h1>
+<p>In this study, we investigated whether a machine learning model can predict if a bank client will subscribe to a term deposit before the first contact of a direct marketing campaign, using only demographic, financial, and past campaign data from the UCI Bank Marketing dataset. Using a logistic regression model evaluated on a held-out test set, we achieved an F1 score of 0.250 (64.1% precision and 15.5% recall), outperforming a majority-class baseline that achieved an F1 score of 0.000. These results matter because they show that banks can use pre-call client information to better prioritize outreach and allocate telemarketing resources when call capacity is limited. However, the model’s low recall means that targeting only predicted subscribers would miss 84.5% of actual subscribers, and because the data comes from a single Portuguese bank, the findings may not generalize to other institutions or capture the causal effect of making a call.</p>
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
@@ -2308,7 +2309,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>The data set used in this project is the Bank Marketing data set, created by Moro, Rita, and Cortez (2014). It was sourced from the UCI Machine Learning Repository and can be found <a href="https://doi.org/10.24432/C5K306">here</a>. Each row is one client of a Portuguese bank who was contacted in a direct marketing campaign. The columns include client details (e.g., age, job, education), details about the contact (e.g., contact type, month, duration), and whether the client subscribed to a term deposit (yes or no).</p>
 <p>We download the data with the code below and save unchanged in <code>data/raw/</code>.</p>
-<div id="89dc5dd1" class="cell" data-execution_count="2">
+<div id="960eaf73" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create folders if they don&#39;t exist</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="op">=</span> Path(<span class="st">&quot;../data/raw&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>raw_dir.mkdir(parents<span class="op">=</span><span class="va">True</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
@@ -2326,7 +2327,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the raw data</span></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>bank.to_csv(raw_dir <span class="op">/</span> <span class="st">&quot;bank_marketing.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8fe6aac4" class="cell" data-execution_count="3">
+<div id="cacdfac6" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the raw data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> pd.read_csv(<span class="st">&quot;../data/raw/bank_marketing.csv&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>bank.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2468,7 +2469,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
 <p>We drop the <code>duration</code> column, because the call length is only known after the call has ended, so it cannot be used to predict the outcome of a new call. We then split the data into a training set (80%) and a test set (20%). The split is stratified on the target, so both sets have the same share of “yes” and “no”. All exploration and model fitting use the training set only.</p>
-<div id="553df0e5" class="cell" data-execution_count="4">
+<div id="b782371f" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># drop duration: it is only known after the call</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bank <span class="op">=</span> bank.drop(columns<span class="op">=</span>[<span class="st">&quot;duration&quot;</span>])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -2485,7 +2486,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <section id="predictors-and-target" class="level3">
 <h3 class="anchored" data-anchor-id="predictors-and-target">Predictors and target</h3>
 <p>We predict whether a client will subscribe to a term deposit before their first call in the current campaign. The positive class is ‘yes’, meaning the client subscribed. We use client characteristics (age, occupation, marital status, and education), financial information (average yearly account balance, credit default status, and whether the client has a housing loan or a personal loan), and previous campaign history (the number of prior contacts, the number of days since the last prior contact, and the previous campaign outcome). We exclude the current campaign’s recorded contact method, contact date, number of contacts, and call duration because these details are unavailable at the time of prediction.</p>
-<div id="1d627377" class="cell" data-execution_count="5">
+<div id="ee37e0fc" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>numeric_predictors <span class="op">=</span> [</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;age&quot;</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;balance&quot;</span>,</span>
@@ -2551,7 +2552,7 @@ Figure 1: Term-deposit subscription rates by previous campaign contact in the t
 <h3 class="anchored" data-anchor-id="baseline-and-evaluation-metrics">Baseline and evaluation metrics</h3>
 <p>The baseline model always predicts the most common outcome in the training set, which is no subscription. In the training set about 11.7% of clients subscribed to a term deposit, so the baseline model has a training accuracy of about 88.3%, identifying no subscribers.</p>
 <p>We use F1-score for the “yes” class as our primary metric to evaluate model performance, because we want to combine both precision and recall of the model. We also report both scores separately.</p>
-<div id="50f72bea" class="cell" data-execution_count="7">
+<div id="44b03b82" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>majority_label <span class="op">=</span> y_train.value_counts().idxmax()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metrics(y_true, y_pred):</span>
@@ -2570,7 +2571,7 @@ Figure 1: Term-deposit subscription rates by previous campaign contact in the t
 <h3 class="anchored" data-anchor-id="model-fitting">Model fitting</h3>
 <p>We use logistic regression to calculate the probability that a client will subscribe to a term deposit. This model choice makes sense because the outcome has two possible values, yes and no, with yes as the positive class.</p>
 <p>The pipeline standardizes the numeric predictors, replaces missing categorical values with a “missing” label, and one-hot encodes the categorical predictors. We fit the preprocessor and the model on the training data and reserve the test set for evaluating the final model.</p>
-<div id="208d67d3" class="cell" data-execution_count="8">
+<div id="a871a432" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>categorical_preprocessor <span class="op">=</span> make_pipeline(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    SimpleImputer(strategy<span class="op">=</span><span class="st">&quot;constant&quot;</span>, fill_value<span class="op">=</span><span class="st">&quot;missing&quot;</span>),</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">&quot;ignore&quot;</span>),</span>
