@@ -24,6 +24,9 @@ from sklearn.metrics import ConfusionMatrixDisplay
 
 
 # Introduction
+Term deposits are important financial products offered by banks. However, it is not ideal to successfully track customers to subscribe if using direct marketing events. In this way, we are conducting a classification analysis to predict which customers could possibly subscribe given a series of conditions, which is beneficial for banks to increase the marketing efficiency and resource allocation. This is enlightened by previous study which pointed out that machine learning has potential on identifying prospective customers before launching bank telemarketing campaigns, which further support targeted marketing strategies (Tékouabou et al., 2022).
+
+This project aims at predicting, before the first contact with clients in the current campaign, whether customers would subscribe to term deposits during the campaign. We use the Bank Marketing dataset from the UCI Machine Learning Repository (Moro et al., 2014), which contains customers’ demographics, financial, and historical campaign information. Target variable y measures whether a customer subscribes or not (yes or no). In order to prevent unavailable information in predictions, current campaign contact information is excluded. Recent research also discussed predictive models and interpretability analysis can support more effective marketing decisions. (Xie et al., 2023)
 
 
 # Methods
@@ -250,4 +253,9 @@ Future work could compare logistic regression with a different baseline, such as
 
 # References
 
+
 Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C5K306>.
+
+Tékouabou, S. C. K., Gherghina, Ș. C., Toulni, H., Mata, P. N., Mata, M. N., & Martins, J. M. (2022). A machine learning framework towards bank telemarketing prediction. Journal of Risk and Financial Management, 15(6), 269. <https://doi.org/10.3390/jrfm15060269>
+
+Xie, C., Zhang, J.-L., Zhu, Y., Xiong, B., & Wang, G.-J. (2023). How to improve the success of bank telemarketing? Prediction and interpretability analysis based on machine learning. Computers & Industrial Engineering, 175, 108874. <https://doi.org/10.1016/j.cie.2022.108874>
