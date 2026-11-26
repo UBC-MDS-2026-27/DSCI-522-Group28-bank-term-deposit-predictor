@@ -13,3 +13,6 @@ dependencies = [
     "scikit-learn==1.9.1",
     "ucimlrepo==0.0.7",
 ]
+
+[tool.uv]
+add-bounds = “exact”
