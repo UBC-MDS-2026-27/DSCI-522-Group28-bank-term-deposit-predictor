@@ -54,28 +54,53 @@ To suggest a change:
 
 ## Development Setup
 
-1. Install Git, uv 0.13.9, and Quarto 1.10.18 as described in the [README](README.md).
-2. Clone the team repository.
+Follow [How to run the analysis](README.md#how-to-run-the-analysis) to set up your SSH key and pull the Docker image. Run the Docker Compose commands below from the repository root on your computer.
+
+### Before your first connection
+
+1. Install [Positron](https://positron.posit.co/download.html). It includes Remote SSH.
+2. Check your Git name and email on your computer.
 
    ```bash
-   git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group28-bank-term-deposit-predictor.git
-   cd DSCI-522-Group28-bank-term-deposit-predictor
+   git config --global user.name
+   git config --global user.email
    ```
 
-3. Install the locked Python 3.14 dependencies from the repository root.
+   Set any missing value with the matching command below. Use your name and the email associated with your GitHub account.
 
    ```bash
-   uv sync --locked --python 3.14
+   git config --global user.name "Your Name"
+   git config --global user.email "you@example.com"
    ```
 
-4. Render the report from the repository root.
+### Work in the container
+
+1. Start the container and check that `analysis-env` is running.
 
    ```bash
-   uv run --locked quarto render reports/bank_term_deposit_predictor.qmd --to html
+   docker compose up -d
+   docker compose ps
    ```
 
-   Rendering downloads the public Bank Marketing dataset from the UCI Machine Learning Repository, writes `data/raw/bank_marketing.csv`, and generates the train and test splits in `data/processed/`. An internet connection is required for the download. Open `reports/bank_term_deposit_predictor.html` to inspect the result.
+2. In Positron, open the Command Palette (`Cmd+Shift+P` on Mac or `Ctrl+Shift+P` on Windows). Choose **Remote SSH: Show Remote Menu**, select **Connect to Host**, and enter `root@localhost:2222`. If prompted, select **Linux** and confirm the host fingerprint.
+3. In the connected Positron window, choose **Open Folder** and enter `/workspace`.
+4. Open the interpreter menu, choose **New Console Session**, and select `/opt/venv/bin/python`. If it is missing from the list, open **Python: Select Interpreter** in the Command Palette, choose **Enter interpreter path…**, and enter `/opt/venv/bin/python`. In the Python console, run `import sys` and then `print(sys.executable)` to confirm that it prints `/opt/venv/bin/python`.
+5. Use the Terminal, Console, and Render button in the connected Positron window. They run inside the container.
+6. When you finish, close the remote Positron window. In a terminal on your computer, run this command from the repository root.
 
+   ```bash
+   docker compose down
+   ```
+
+### Troubleshoot the connection
+
+- **`~/.ssh/id_ed25519.pub` is a directory.** Run `docker compose down`, remove the directory Docker created, and create the key using the README steps. Then start the container again.
+- **`~/.gitconfig` is a directory.** Run `docker compose down`, remove the directory Docker created, and set your Git name and email before restarting. If Git cannot identify you inside the container, check those settings on your computer.
+- **SSH asks for a password.** Check that your public key is at `~/.ssh/id_ed25519.pub` and matches the path in `docker-compose.yml`.
+- **SSH reports that the host identification changed.** Run `ssh-keygen -R "[localhost]:2222"` on your computer and reconnect.
+- **GitHub asks you to sign in during a push.** Complete the sign-in in the browser that Positron opens.
+- **SSH rejects the mounted key on Linux because of its ownership.** Uncomment the `StrictModes no` line in the `Dockerfile` and push the change so GitHub Actions builds an updated image.
+- **Port `2222` is already in use.** Change the first port in `"2222:22"` in `docker-compose.yml` and connect using the new port.
 ---
 
 ## Workflow for Submitting Changes
