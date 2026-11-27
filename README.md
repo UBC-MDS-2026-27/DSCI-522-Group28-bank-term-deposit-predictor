@@ -68,4 +68,4 @@ Example AI Prompt:
 
 ## Rendered report
 
-[Predicting Bank Term Deposit Subscription (HTML)](https://ubc-mds-2026-27.github.io/DSCI-522-Group28-bank-term-deposit-predictor/reports/bank_term_deposit_predictor.html)
+[Predicting Bank Term Deposit Subscription (HTML)](https://ubc-mds-2026-27.github.io/DSCI-522-Group28-bank-term-deposit-predictor/)
