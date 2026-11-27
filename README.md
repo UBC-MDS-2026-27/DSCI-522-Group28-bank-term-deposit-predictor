@@ -8,35 +8,47 @@ This project asks whether a client will subscribe to a bank term deposit given t
 
 ## How to run the analysis
 
-1. Install Git, uv 0.13.9, and Quarto 1.10.18. Check that `git`, `uv`, and `quarto` are available in your terminal.
-2. Clone the repository and enter the project directory.
+Install Git and Docker Desktop, then start Docker Desktop. Clone the repository and enter the project directory:
 
-   ```bash
-   git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group28-bank-term-deposit-predictor.git
-   cd DSCI-522-Group28-bank-term-deposit-predictor
-   ```
+```bash
+git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group28-bank-term-deposit-predictor.git
+cd DSCI-522-Group28-bank-term-deposit-predictor
+```
 
-3. Install the locked Python dependencies.
+### 1. Set up your SSH key
 
-   ```bash
-   uv sync --locked
-   ```
+If you don't already have an SSH key at `~/.ssh/id_ed25519.pub`, run the following command and press Enter to accept the default location:
 
-4. Render the Quarto report from the repository root. Rendering requires an internet connection to fetch the dataset.
+```bash
+ssh-keygen -t ed25519
+```
 
-   ```bash
-   uv run quarto render reports/bank_term_deposit_predictor.qmd --to html
-   ```
+### 2. Download the Docker image
 
-5. Open `reports/bank_term_deposit_predictor.html` in your browser. Rendering saves the raw dataset to `data/raw/bank_marketing.csv` and the training and test splits to `data/processed/`.
+From the project directory, run:
+
+```bash
+docker compose pull
+```
+
+### 3. Render the report
+
+From the same directory, run the analysis and render the report.
+
+```bash
+docker compose run --rm analysis-env uv run quarto render
+```
+
+Rendering needs an internet connection to download the Bank Marketing dataset from the UCI Machine Learning Repository. It saves the raw data to `data/raw/bank_marketing.csv` and the training and test splits to `data/processed/`.
+
+Open `reports/bank_term_deposit_predictor.html` in your browser to view the report. The `--rm` option removes the container automatically when the command finishes.
+
+If you want to make changes to the project, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Dependencies
 
-- Python 3.14
-- uv 0.13.9
-- Quarto 1.10.18
+Docker runs the analysis in an image built from the [Dockerfile](Dockerfile). The image includes Python, uv, and Quarto. The Python packages are declared in [pyproject.toml](pyproject.toml) and pinned in [uv.lock](uv.lock).
 
-Python packages, including Jupyter, pandas, and scikit-learn, are declared in `pyproject.toml` and pinned in `uv.lock`.
 
 ## Licenses
 
