@@ -101,6 +101,35 @@ Follow [How to run the analysis](README.md#how-to-run-the-analysis) to set up yo
 - **GitHub asks you to sign in during a push.** Complete the sign-in in the browser that Positron opens.
 - **SSH rejects the mounted key on Linux because of its ownership.** Uncomment the `StrictModes no` line in the `Dockerfile` and push the change so GitHub Actions builds an updated image.
 - **Port `2222` is already in use.** Change the first port in `"2222:22"` in `docker-compose.yml` and connect using the new port.
+
+### Add or update a Python package
+
+1. Create a branch. In the Positron terminal inside the container, run the following command with the package name and exact version. To update an existing package, use its current package name and the new version you want to pin.
+
+   ```bash
+   uv add "PACKAGE==VERSION"
+   ```
+
+2. Commit `pyproject.toml` and `uv.lock` together and push the branch. Wait for GitHub Actions to publish the new Docker image and update its tag in `docker-compose.yml` on your branch.
+3. From the repository root on your computer, with the same branch checked out, run:
+
+   ```bash
+   git pull
+   docker compose pull
+   ```
+
+4. Open a pull request. After it merges and the workflow on `main` finishes, teammates on `main` run `git pull` and `docker compose pull` to get the updated image.
+
+### Republish the report
+
+Rerender the report using the [README instructions](README.md#3-render-the-report). From the repository root, copy the newly rendered HTML to the file served by GitHub Pages.
+
+```bash
+cp reports/bank_term_deposit_predictor.html docs/index.html
+```
+
+Commit and push the updated `docs/index.html` with your report changes.
+
 ---
 
 ## Workflow for Submitting Changes
