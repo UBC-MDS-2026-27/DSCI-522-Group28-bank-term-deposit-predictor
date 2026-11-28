@@ -9,6 +9,7 @@ This project asks whether a client will subscribe to a bank term deposit given t
 ## How to run the analysis
 
 Install Git and Docker Desktop, then start Docker Desktop. Clone the repository and enter the project directory:
+On Windows, run these commands in Git Bash (included with Git for Windows) so `ssh-keygen` and `~` paths work as written.
 
 ```bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Group28-bank-term-deposit-predictor.git
@@ -52,19 +53,16 @@ Docker runs the analysis in an image built from the [Dockerfile](Dockerfile). Th
 
 ## Licenses
 
-- **Code and software** are covered by the MIT License.
-- **Report and documentation** are covered by the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license (CC BY-NC-ND 4.0).
+Code and software are covered by the MIT License, while the report and documentation are covered by the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International license (CC BY-NC-ND 4.0). See [LICENSE.md](LICENSE.md) for the full license terms and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for our community standards.
 
-See [LICENSE.md](LICENSE.md) for the license terms.
 
 ## AI use statement:
-We used ChatGPT 6.0 to help the project for uv, Quarto, and examples of Code of Conduct.
-We used it in the Contributing.md, License.md to develop the structure and base text.
-All AI-generated changes were reviewed, tested, and edited by our members, who take full responsibility for the content of the repository.
+We used ChatGPT 6.0 to assist with uv, Quarto, and examples for `CODE_OF_CONDUCT.md`, as well as to draft the structure and base text of `CONTRIBUTING.md` and `LICENSE.md`. For example, we asked it for Code of Conduct examples and for summaries of similar prior projects. All AI-generated changes were reviewed, tested, and edited by our members, who take full responsibility for the content of the repository.
 
 Example AI Prompt:
    - Provide me with some Code of Conduct example, for references to our project.
    - Find relevant articles or reports that have previously done similar to our project, and list the main purpose of them.
+   - Verify if our repository meets all Milestone 2 requirements and check `README.md` and `CONTRIBUTING.md` for typos or formatting issues.
 
 ## Rendered report
 
